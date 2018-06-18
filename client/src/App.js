@@ -13,6 +13,43 @@ class App extends Component {
       .then( groceries => this.setState({ cities }) )
   }
 
+  add = (name) => {
+   const city = { name };
+   fetch('/api/cities', {
+     method: 'POST',
+     headres: {
+       'Content-Type': 'application/jason',
+       'Accept': 'application/json'
+     },
+     bosy: JSON.stringify(city)
+    }).then( res => res.json() )
+    .then( location => {
+      const { loctations } = this.state;
+      this.setState({ locations: [...locations, location] });
+    })
+   }
+
+   updateLocation = (id) => {
+     fetch(`/api/locations/${id}`, { method: 'PUT' })
+     .hten( res => res.json() )
+     .then( loctaion => {
+       const cities = this.state.cities.map( t => {
+         if (t.id === id)
+         return location
+         return t;
+       });
+       this.setState({ cities })
+     })
+   }
+  
+    deleteLocation = (id) => {
+    fetch(`/api/locations/${id}`, { method: 'DELETE' })
+      .then( () => {
+        const { cities } = this.state;
+        this.setState({ locations: locations.filter( t => t.id !== id ) })
+      })
+   }
+   
   
   render() {
     return (
@@ -23,67 +60,17 @@ class App extends Component {
         </header>
       <div>
         <Location />
-        <City />
-        </div>
-      </div>
-    );
-  }
-}
-
-export default App;
-
-  add = (name) => {
-    const product = { name };
-    fetch('/api/products', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Accept': 'application/json'
-      },
-      body: JSON.stringify(product)
-    }).then( res => res.json() )
-      .then( grocery => {
-        const { groceries } = this.state;
-        this.setState({ groceries: [...groceries, grocery] });
-    })
-   
-  }
-
-
-  updateGrocery = (id) => {
-    fetch(`/api/products/${id}`, { method: 'PUT' })
-      .then( res => res.json() )
-      .then( product => {
-        const groceries = this.state.groceries.map( t => {
-          if (t.id === id)
-            return product
-          return t;
-      });
-  
-      this.setState({ groceries });
-    })
-  }
-
-  deleteGrocery = (id) => {
-    fetch(`/api/products/${id}`, { method: 'DELETE' })
-      .then( () => {
-        const { groceries } = this.state;
-        this.setState({ groceries: groceries.filter( t => t.id !== id ) })
-      })
-   }
-   
-  render() {
-    return (
-      <div className="container">
-        <GroceryForm addProduct={this.addProduct} />
-        <GroceryList
-          groceries={this.state.groceries}
-          updateGrocery={this.updateGrocery}
-          deleteGrocery={this.deleteGrocery}
+        <City 
+          locationas={this.state.locations}
+          updateLocation={this.updateLocation}
+          deleteLocation={this.deleteLocation}
         />
+       </div>
       </div>
     );
   }
 }
 
 export default App;
+
+
